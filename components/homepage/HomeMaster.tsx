@@ -50,6 +50,9 @@ export default function HomeMaster() {
     }
   }, [walletAddress]);
 
+
+
+
   // Process data with wallet address
   useEffect(() => {
     if (userPortfolio && stakingData) {

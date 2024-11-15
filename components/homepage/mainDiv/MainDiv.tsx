@@ -3,12 +3,17 @@
 import { useEffect, useState } from "react"
 import { DynamicEmbeddedWidget, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { IoSearch } from "react-icons/io5";
+import { IoEnterOutline } from "react-icons/io5";
+
+import toast from 'react-hot-toast';
+import { isAddress } from '@ethersproject/address';
 
 export default function MainDiv({ passWalletAddress }: { passWalletAddress: (address: string) => void }) {
   const [showDynamicWallet, setShowDynamicWallet] = useState(false) // For the widget, sets the box size.
   const [showWidget, setShowWidget] = useState(false) // For the widget appearance delay
   const [isTypingWalletAddress, setIsTypingWalletAddress] = useState(false)
   const [walletAddress, setWalletAddress] = useState('')
+  const [inputValue, setInputValue] = useState('')
 
   const { user, handleLogOut } = useDynamicContext()
 
@@ -44,6 +49,25 @@ export default function MainDiv({ passWalletAddress }: { passWalletAddress: (add
     }
   }, [showDynamicWallet])
 
+  const handleSearch = () => {
+    console.log('Search button clicked');
+    if (!inputValue) return;
+    
+    if (isAddress(inputValue)) {
+      setWalletAddress(inputValue);
+      passWalletAddress(inputValue);
+      setInputValue('');
+    } else {
+      toast.error('Please enter a valid wallet address');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className={`
       rounded-md flex items-center justify-center gap-2 
@@ -74,24 +98,49 @@ export default function MainDiv({ passWalletAddress }: { passWalletAddress: (add
             <IoSearch className="text-gray-400 text-xl" />
             <input 
               type="text" 
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               placeholder="Search for a wallet address..." 
               className="w-full h-[30px] bg-transparent border-0 outline-none focus:outline-none focus:ring-0 focus:border-0 text-gray-300 placeholder:text-gray-500"
               onFocus={() => setIsTypingWalletAddress(true)}
-              onBlur={() => setIsTypingWalletAddress(false)}
+              onBlur={(e) => {
+                if (!(e.relatedTarget?.classList.contains('search-button'))) {
+                  setIsTypingWalletAddress(false)
+                }
+              }}
+              onKeyDown={handleKeyPress}
             />
           </div>
 
-          <button 
-            onClick={() => setShowDynamicWallet(true)}
-            className={`${isTypingWalletAddress ? 'translate-x-[100%] opacity-0' : 'translate-x-0 opacity-100'} 
-              bg-teal-400 text-black font-[300] py-2 px-6 rounded-sm 
-              border border-teal-400 hover:bg-transparent hover:text-white 
-              transition-[transform,opacity]  ease-in-out duration-700
-              hover:transition-colors hover:duration-300`}
-            disabled={isTypingWalletAddress}
-          >
-            or <span className="font-[500]">Connect Wallet</span>
-          </button>
+          <div className="flex gap-2">
+            {inputValue && (
+              <button 
+                onClick={handleSearch}
+                type="button"
+                className="search-button bg-teal-400 text-black font-[300] w-[50px] h-[42px] px-2 rounded-sm 
+                  border border-teal-400 hover:bg-transparent hover:text-white 
+                  transition-all duration-300 ease-in-out
+                  translate-x-0 opacity-100
+                  animate-in slide-in-from-right"
+              >
+                <IoEnterOutline size={25} />
+              </button>
+            )}
+
+            <button 
+              onClick={() => setShowDynamicWallet(true)}
+              className={`
+                ${isTypingWalletAddress ? 'translate-x-[100%] opacity-0' : 'translate-x-0 opacity-100'} 
+                ${inputValue ? 'hidden' : ''}
+                bg-teal-400 text-black font-[300] py-2 px-6 rounded-sm 
+                border border-teal-400 hover:bg-transparent hover:text-white 
+                transition-[transform,opacity] ease-in-out duration-700
+                hover:transition-colors hover:duration-300`}
+              disabled={isTypingWalletAddress}
+            >
+              or <span className="font-[500]">Connect Wallet</span>
+            </button>
+          </div>
         </div>
       )}
     </div>

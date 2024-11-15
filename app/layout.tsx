@@ -3,6 +3,11 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+import { Toaster } from 'react-hot-toast';
+
+
+
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,7 +39,8 @@ export default function RootLayout({
           settings={{
             environmentId: '4a88daf9-6c0b-41c3-ba51-62853ee494e5',
             walletConnectors: [ EthereumWalletConnectors ],
-          }}>
+        }}>
+          <Toaster position="top-right" />
           {children}
         </DynamicContextProvider>
       </body>
