@@ -27,6 +27,7 @@ export default function HomeMaster() {
 
   // Get the tokens from the users wallet address 
   useEffect(() => {
+    console.log('walletAddress useEffect running')
     if (walletAddress) {
       const fetchTokens = async () => {
         console.log('Starting token fetch for wallet:', walletAddress);
@@ -60,9 +61,9 @@ export default function HomeMaster() {
 
   return (
     <div>
-      {stakingData && <p>{JSON.stringify(stakingData)}</p>}
+      {/* {stakingData && <p>{JSON.stringify(stakingData)}</p>} */}
       {walletAddress && <p>Wallet Address: {walletAddress}</p>}
-      <div className="text-white flex w-[100vw] h-[100vh] items-center justify-center">
+      <div className="text-white flex w-[100vw] h-[50vh] items-center justify-center">
         <MainDiv passWalletAddress={setWalletAddress}/>
       </div>
       {stakingDataError && <p>Error getting staking rewards data: {stakingDataError}</p>}
@@ -71,16 +72,7 @@ export default function HomeMaster() {
       
       {/* Show network tokens as they arrive */}
       {networkTokens.length > 0 ? (
-        networkTokens.map((network) => (
-          <div key={network.network} className="mt-4">
-            <h3 className="font-bold">{network.network}</h3>
-            <pre className="bg-gray-100 p-2 rounded">
-              {JSON.stringify(network.tokens, null, 2)}
-            </pre>
-          </div>
-        ))
-      ) : walletAddress ? (
-        <p>No tokens found yet</p>
+        <p>Network tokens: {JSON.stringify(networkTokens)}</p>
       ) : null}
     </div>
   )

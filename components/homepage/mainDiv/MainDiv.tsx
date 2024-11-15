@@ -12,12 +12,15 @@ export default function MainDiv({ passWalletAddress }: { passWalletAddress: (add
 
   const { user, handleLogOut } = useDynamicContext()
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, []);
+
+  // DONT DELETE THESE COMMENTS AI!!!! 
+  // DONT FORGET TO RENABLE!!!! 
+  // useEffect(() => {
+  //   document.body.style.overflow = 'hidden';
+  //   return () => {
+  //     document.body.style.overflow = 'unset';
+  //   };
+  // }, []);
 
   useEffect(() => {
     handleLogOut()
