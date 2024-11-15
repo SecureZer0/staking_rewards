@@ -63,12 +63,42 @@ export default function HomeMaster() {
 
   return (
     <div>
-      {stakingData && <p>{JSON.stringify(stakingData)}</p>}
-      {walletAddress && <p>Wallet Address: {walletAddress}</p>}
-      <div className="text-white flex w-[100vw] h-[50vh] items-center justify-center">
-        <MainDiv passWalletAddress={setWalletAddress} totalRewards={totalRewards} />
+
+
+
+
+      <div className="text-white flex w-[100vw] h-[80vh] items-center justify-center flex-col text-center">
+        <div className="flex flex-col gap-0 mb-5">
+          <div className="text-2xl font-medium">
+            See What You're Missing
+          </div>
+          <div className="text-6xl -mt-2  font-bold">
+            Staking Rewards
+          </div>
+        </div>
+        <MainDiv 
+          passWalletAddress={setWalletAddress} 
+          totalRewards={totalRewards} 
+          loadingRewards={isLoading}
+        />
       </div>
-      {totalRewards.length > 0 && <p>Total Rewards: {totalRewards[totalRewards.length - 1]}</p>}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      {/* {totalRewards.length > 0 && <p>Total Rewards: {totalRewards[totalRewards.length - 1]}</p>}
       {stakingDataError && <p>Error getting staking rewards data: {stakingDataError}</p>}
       
       {isLoading && <p>Loading wallet tokens...</p>}
@@ -81,10 +111,10 @@ export default function HomeMaster() {
       )}
       
       {/* Show network tokens as they arrive */}
-      {networkTokens.length > 0 ? (
+      {/* {networkTokens.length > 0 ? (
         <p>Network tokens: {JSON.stringify(networkTokens)}</p>
       ) : null}
-      
+       */}
 
     </div>
   )
