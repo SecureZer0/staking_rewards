@@ -4,13 +4,20 @@ import { useEffect, useState } from "react"
 import { DynamicEmbeddedWidget, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { IoSearch } from "react-icons/io5";
 
-export default function MainDiv() {
+export default function MainDiv({ passWalletAddress }: { passWalletAddress: (address: string) => void }) {
   const [showDynamicWallet, setShowDynamicWallet] = useState(false) // For the widget, sets the box size.
   const [showWidget, setShowWidget] = useState(false) // For the widget appearance delay
   const [isTypingWalletAddress, setIsTypingWalletAddress] = useState(false)
   const [walletAddress, setWalletAddress] = useState('')
 
   const { user, handleLogOut } = useDynamicContext()
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   useEffect(() => {
     handleLogOut()
@@ -21,6 +28,7 @@ export default function MainDiv() {
       setShowDynamicWallet(false)
       setShowWidget(false)
       setWalletAddress(user.verifiedCredentials[0].address)
+      passWalletAddress(user.verifiedCredentials[0].address)
     }
   }, [user])
 
@@ -63,7 +71,7 @@ export default function MainDiv() {
             <IoSearch className="text-gray-400 text-xl" />
             <input 
               type="text" 
-              placeholder="Type a command or search..." 
+              placeholder="Search for a wallet address..." 
               className="w-full h-[30px] bg-transparent border-0 outline-none focus:outline-none focus:ring-0 focus:border-0 text-gray-300 placeholder:text-gray-500"
               onFocus={() => setIsTypingWalletAddress(true)}
               onBlur={() => setIsTypingWalletAddress(false)}
