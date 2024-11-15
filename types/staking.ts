@@ -11,8 +11,41 @@ export type StakingRewardTable = {
     [key: string]: any;  // JSONB type
   };
   price_usd: number;
-  apy: number | null;
-  apy_chain: string | null;
-  apy_source: string | null;
+  apy: number ; // Percentage
+  apy_chain: string ;
+  apy_source: string ;
   updated_at: Date;
 } 
+
+export type TokenBalance = {
+  contractAddress: string;
+  tokenBalance: string;
+}
+
+export type AlchemyResponse = {
+  address: string;
+  tokenBalances: TokenBalance[];
+}
+
+export type NetworkTokens = {
+  network: string;
+  tokens: TokenBalance[];
+}
+
+
+export type UserPortfolio = {
+
+  token_name: string;
+  token_symbol: string;
+  token_decimal: number;
+  price_usd: number;
+  apy: number;
+  apy_chain: string;
+  apy_source: string;
+
+  balance: number; // Amount of tokens in wallet (decimal)
+  balance_usd: number; // Amount of tokens in wallet (USD)
+  current_chain: string; // Chain the token is on
+  annual_rewards: number; // Annual staking rewards in USD
+
+}

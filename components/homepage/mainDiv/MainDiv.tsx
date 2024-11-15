@@ -7,13 +7,20 @@ import { IoEnterOutline } from "react-icons/io5";
 
 import toast from 'react-hot-toast';
 import { isAddress } from '@ethersproject/address';
+import CountUp from 'react-countup';
 
-export default function MainDiv({ passWalletAddress }: { passWalletAddress: (address: string) => void }) {
+interface MainDivProps {
+  passWalletAddress: (address: string) => void;
+  totalRewards: number[];
+}
+
+export default function MainDiv({ passWalletAddress, totalRewards }: MainDivProps) {
   const [showDynamicWallet, setShowDynamicWallet] = useState(false) // For the widget, sets the box size.
   const [showWidget, setShowWidget] = useState(false) // For the widget appearance delay
   const [isTypingWalletAddress, setIsTypingWalletAddress] = useState(false)
   const [walletAddress, setWalletAddress] = useState('')
   const [inputValue, setInputValue] = useState('')
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const { user, handleLogOut } = useDynamicContext()
 
@@ -49,6 +56,28 @@ export default function MainDiv({ passWalletAddress }: { passWalletAddress: (add
     }
   }, [showDynamicWallet])
 
+  useEffect(() => {
+    if (totalRewards.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrentIndex(prev => {
+        // Only increment if we have a next value
+        if (prev < totalRewards.length - 2) {
+          return prev + 1;
+        }
+        // Stay at the last valid pair of indices
+        return totalRewards.length - 2;
+      });
+    }, 2000);
+
+    // Catch up logic
+    if (currentIndex < totalRewards.length - 2) {
+      setCurrentIndex(totalRewards.length - 2);
+    }
+
+    return () => clearInterval(timer);
+  }, [totalRewards, currentIndex]);
+
   const handleSearch = () => {
     console.log('Search button clicked');
     if (!inputValue) return;
@@ -73,10 +102,17 @@ export default function MainDiv({ passWalletAddress }: { passWalletAddress: (add
       rounded-md flex items-center justify-center gap-2 
       bg-[#121212] border-teal-500 border transition-all duration-300 ease-in-out
       ${showDynamicWallet ? 'md:w-[600px] h-[450px] w-[95vw]' : 'md:w-[800px] w-[95vw] h-[50px]'}
+      ${totalRewards.length > 0 && walletAddress ? 'h-[175px]' : ''}
     `}>
-      {walletAddress ? (
+      {totalRewards.length > 0 && walletAddress ? (
         <div>
-          <p>{walletAddress}</p>
+          <p className="text-white text-8xl font-[500]">$<CountUp 
+              start={totalRewards[currentIndex] || 0}
+              end={totalRewards[currentIndex + 1] || 0}
+              decimals={2}
+              duration={2}
+              separator=","
+            /></p>
         </div>
       ) : showDynamicWallet ? (
         <div className="relative w-full h-full transition-all duration-300 ease-in-out">
