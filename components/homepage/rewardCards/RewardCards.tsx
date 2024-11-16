@@ -10,7 +10,7 @@ export default function RewardCards({ userPortfolio, stakingData }: { userPortfo
         .sort((a, b) => b.annual_rewards - a.annual_rewards)
         .map((token, i) => {
 
-            if (token.annual_rewards < 10) return null;
+            if (token.annual_rewards < 0.5) return null;
 
             let sameChain = token.apy_chain === token.current_chain;
 
