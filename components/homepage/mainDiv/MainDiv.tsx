@@ -125,11 +125,11 @@ export default function MainDiv({ passWalletAddress, totalRewards, loadingReward
         rounded-md flex items-center justify-center origin-top gap-2 
         bg-[#121212] transition-all duration-300 ease-in-out
         ${showDynamicWallet ? 'md:w-[600px] h-[450px] w-[95vw]' : 'md:w-[800px] w-[95vw] h-[50px]'}
-        ${totalRewards.length > 0 && walletAddress ? 'h-[175px]' : ''}
+        ${walletAddress ? '!h-[175px]' : ''}
       `}>
         {totalRewards.length > 0 && walletAddress ? (
           <div>
-            <p className="text-white text-8xl font-[500]">$<CountUp 
+            <p className="text-white text-[64px] md:text-8xl font-[500]">$<CountUp 
                 start={totalRewards[currentIndex] || 0}
                 end={totalRewards[currentIndex + 1] || 0}
                 decimals={2}
