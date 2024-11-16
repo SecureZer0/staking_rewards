@@ -5,7 +5,10 @@ import { StakingRewardTable } from '@/types/staking'
 export async function GET() {
   try {
     const headers = {
-      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=3600'
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=3600',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     }
 
     const result = await pool.query('SELECT * FROM staking_rewards')
