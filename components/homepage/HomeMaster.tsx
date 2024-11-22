@@ -5,18 +5,39 @@ import { useStakingData } from "@/hooks/useStakingData";
 import { StakingRewardTable, NetworkTokens, UserPortfolio } from "@/types/staking";
 import { getWalletTokens } from '@/hooks/useGetWalletTokens';
 import { useProcessWalletTokens } from '@/hooks/useProcessWalletTokens';
+
+import ExampleWallets from "./exampleWallets/ExampleWallets";
 import RewardCards from "./rewardCards/RewardCards";
 
 export default function HomeMaster() {
-  const [walletAddress, setWalletAddress] = useState('')
-  const [userPortfolio, setUserPortfolio] = useState<UserPortfolio[]>([])
-  const [stakingData, setStakingData] = useState<StakingRewardTable[] | null>(null)
-  const [stakingDataError, setStakingDataError] = useState<string | null>(null)
-  const [networkTokens, setNetworkTokens] = useState<NetworkTokens[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [networkAddresses, setNetworkAddresses] = useState<{[key: string]: string[]}>({});
-  const [totalRewards, setTotalRewards] = useState<number[]>([0]);
 
+  // STATES
+   // USER PORTFOLIO STATES 
+    // Users Wallet Address (0x...)
+    const [walletAddress, setWalletAddress] = useState('')
+    // Tokens in user wallet, raw format
+    const [userTokens, setUserTokens] = useState<NetworkTokens[]>([])
+    // User Portfolio With calculated Rewards & APYs spread in
+    const [userPortfolio, setUserPortfolio] = useState<UserPortfolio[]>([])
+    // Calculated Total Rewards for a user
+    const [totalRewards, setTotalRewards] = useState<number[]>([0]);
+
+   // STAKING DATA STATES
+    const [stakingData, setStakingData] = useState<StakingRewardTable[] | null>(null)
+    const [stakingDataError, setStakingDataError] = useState<string | null>(null)
+
+   // TOKEN ADDRESSES STATES
+    const [networkAddresses, setNetworkAddresses] = useState<{[key: string]: string[]}>({});
+    const [isLoading, setIsLoading] = useState(false)
+    const [isNetworkChecking, setIsNetworkChecking] = useState(false);
+
+   // Specicial Wallets
+    const [exampleWalletOwner, setExampleWalletOwner] = useState("")
+  //
+
+  console.log(stakingData)
+
+  
   // Get data from staking_rewards table
   useEffect(() => {
     const fetchData = async () => {
@@ -34,13 +55,19 @@ export default function HomeMaster() {
       const fetchTokens = async () => {
         console.log('Starting token fetch for wallet:', walletAddress);
         setIsLoading(true);
-        setNetworkTokens([]);
+        setUserTokens([]);
         
         try {
-          await getWalletTokens(walletAddress, networkAddresses, (networkData) => {
-            console.log('Received network data:', networkData);
-            setNetworkTokens(prev => [...prev, networkData]);
-          });
+          await getWalletTokens(
+            walletAddress, 
+            networkAddresses, 
+            (networkData) => {
+                setUserTokens(prev => [...prev, networkData]);
+            },
+            (isRunning) => {
+                setIsNetworkChecking(isRunning);
+            }
+          );
         } catch (error) {
           console.error('Error fetching tokens:', error);
         } finally {
@@ -53,7 +80,7 @@ export default function HomeMaster() {
   }, [walletAddress, networkAddresses]);
 
   // Process the wallet tokens and set the user portfolio
-  useProcessWalletTokens(networkTokens, stakingData || [], setUserPortfolio);
+  useProcessWalletTokens(userTokens, stakingData || [], setUserPortfolio);
 
   // Calculate the total rewards
   useEffect(() => {
@@ -68,30 +95,42 @@ export default function HomeMaster() {
         text-white flex w-[100vw] flex-col text-center items-center justify-center
         transition-[height] duration-700 ease-in-out h-[100svh] 
       `}>
+
         <div className="flex flex-col gap-0 sm:-mt-[10vh] mb-10 sm:mb-5">
         {walletAddress ? 
-          <div className="sm:text-6xl text-4xl -mt-2  font-bold leading-none">
-            You Could Make
+          <div className="text-4xl -mt-2  font-medium leading-none">
+            Staking would earn {exampleWalletOwner ? exampleWalletOwner.split(' ').pop() : 'you'}:
           </div>
           : 
-          <>
-            <div className="hidden sm:block text-2xl font-medium">
-              See What You're Missing
+
+          <div className="text-left w-[1000px] mb-[15px]">
+            <h1 className=" text-[120px] font-medium leading-none -ml-8">
+              Yield Finder
+            </h1>
+            <div className="text-[25px] font-[300] w-[565px] leading-none">
+             Earn real passive income by staking your tokens,
+             simply enter your wallet to calculate rewards
             </div>
-            <div className="text-6xl -mt-2  font-bold">
-              Staking Rewards
-            </div>
-            <div className="block sm:hidden text-lg font-medium ">
-              See What You're Missing
-            </div>
-            </>
+          </div>
           }
         </div>
+
+        {isNetworkChecking && <p>Searching for yield..</p>}
+
         <MainDiv 
-          passWalletAddress={setWalletAddress} 
+          setWalletAddress={setWalletAddress} 
+          walletAddress={walletAddress} 
           totalRewards={totalRewards} 
           loadingRewards={isLoading}
         />
+
+        {!walletAddress && 
+            <ExampleWallets 
+            setWallet={setWalletAddress}
+            setOwner={setExampleWalletOwner}
+            />
+        }
+
         {walletAddress &&
         <div className="relative group">
           <div className="text-[18px] font-medium text-[#D6D6D6] mt-3 cursor-help flex items-start gap-1">
@@ -110,6 +149,7 @@ export default function HomeMaster() {
           </div>
         </div>
         }
+
       </div>
 
       {userPortfolio.length > 0 && (

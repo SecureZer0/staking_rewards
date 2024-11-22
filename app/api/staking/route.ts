@@ -11,7 +11,7 @@ export async function GET() {
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     }
 
-    const result = await pool.query('SELECT * FROM staking_rewards')
+    const result = await pool.query('SELECT * FROM staking_rewards_new')
     const stakingData: StakingRewardTable[] = result.rows
 
     return NextResponse.json(stakingData, { headers })

@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   description: "See What You're Missing",
 };
 
+import { ThirdwebProvider } from "thirdweb/react";
+import App from "next/app";
+ 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,8 +32,10 @@ export default function RootLayout({
             environmentId: process.env.NEXT_PUBLIC_DYNAMIC_APP_ID!,
             walletConnectors: [ EthereumWalletConnectors ],
         }}>
-          <Toaster position="top-right" />
-          {children}
+          <ThirdwebProvider>
+            <Toaster position="top-right" />
+             {children}  
+          </ThirdwebProvider>
         </DynamicContextProvider>
       </body>
     </html>

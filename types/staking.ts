@@ -2,20 +2,27 @@ export type StakingRewardTable = {
   id: number;
   token_name: string;
   token_symbol: string;
-  token_decimal: number;
   type: 'token' | 'staked_token';
-  unique_id: {
-    [key: string]: any;  // JSONB type
-  };
-  contract_address: {
-    [key: string]: any;  // JSONB type
-  };
-  price_usd: number;
+  coingecko_id: string;
+  contract_addresses: ContractAddressMap
+  price: number;
   apy: number ; // Percentage
+  apy_30d: number; // Percentage
   apy_chain: string ;
   apy_source: string ;
-  updated_at: Date;
+  apy_updated_at: Date;
+  price_updated_at: Date;
 } 
+
+interface ChainContractInfo {
+  decimal: number;
+  contract_address: string;
+}
+
+export interface ContractAddressMap {
+  [chainName: string]: ChainContractInfo;
+}
+
 
 export type TokenBalance = {
   contractAddress: string;
@@ -40,6 +47,7 @@ export type UserPortfolio = {
   token_decimal: number;
   price_usd: number;
   apy: number;
+  apy_30d: number;
   apy_chain: string;
   apy_source: string;
 
@@ -47,5 +55,6 @@ export type UserPortfolio = {
   balance_usd: number; // Amount of tokens in wallet (USD)
   current_chain: string; // Chain the token is on
   annual_rewards: number; // Annual staking rewards in USD
+  annual_rewards_30d: number; // 30d staking rewards in USD
 
 }

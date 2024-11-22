@@ -40,10 +40,12 @@ export default function RewardCards({ userPortfolio, stakingData }: { userPortfo
 
                         <div className="flex flex-col items-end">
                             <div className="text-[32px] md:text-[42px] font-semibold leading-none">
-                                ${token.annual_rewards.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                                ${token.annual_rewards.toLocaleString('en-US', { maximumFractionDigits: 2 })} <br />
+                                ${token.annual_rewards_30d.toLocaleString('en-US', { maximumFractionDigits: 2 })}
                             </div>
                             <div className="text-[14px] md:text-[24px] text-[#D6D6D6] font-light">
-                                {token.apy}% APY
+                                {(Number(token.apy || 0)).toFixed(2)}% APY <br />
+                                {(Number(token.apy_30d || 0)).toFixed(2)}% APY
                             </div>
                         </div>
 
