@@ -18,7 +18,7 @@ import { HiOutlineSparkles } from "react-icons/hi2";
 import { Arrow } from '@/components/icons/Arrow';
 
 interface TabState {
-    [key: string]: 'stake' | 'guide' | 'details';
+    [key: number]: 'stake' | 'guide' | 'details';
 }
 
 export default function RewardCards({ userPortfolio, stakingData }: { userPortfolio: UserPortfolio[], stakingData: StakingRewardTable[] | null }) {
