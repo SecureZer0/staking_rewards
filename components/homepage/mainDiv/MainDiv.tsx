@@ -139,7 +139,12 @@ export default function MainDiv({ walletAddress ,setWalletAddress, totalRewards,
 
 
               <button 
-                onClick={() => setShowDynamicWallet(true)}
+                onClick={() => {
+                  toast.error("Feature currently disabled, try again later", {
+                    position: "bottom-right",
+                    duration: 3000
+                  });
+                }}
                 className={`
                   ${isTypingWalletAddress ? 'translate-x-[210%] opacity-0' : 'translate-x-0 opacity-100'} 
                   ${inputValue ? 'hidden' : ''}
@@ -154,7 +159,12 @@ export default function MainDiv({ walletAddress ,setWalletAddress, totalRewards,
               </button>
 
               <button 
-                onClick={() => setShowDynamicWallet(true)}
+                onClick={() => {
+                  toast.error("Feature currently disabled, try again later", {
+                    position: "bottom-right",
+                    duration: 3000
+                  });
+                }}
                 className={`
                   ${isTypingWalletAddress ? 'translate-x-[110%] opacity-0' : 'translate-x-0 opacity-100'} 
                   ${inputValue ? 'hidden' : ''}
