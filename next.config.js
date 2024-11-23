@@ -15,7 +15,6 @@ const nextConfig = {
     return config
   },
   experimental: {
-    optimizeCss: true,
     workerThreads: true,
     cpus: 1
   }
