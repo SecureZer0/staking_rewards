@@ -22,9 +22,7 @@ export async function useStakingData(): Promise<StakingDataResponse> {
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/staking`, {
-      next: { revalidate: 1 }
-    });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/staking`);
     
     if (!res.ok) {
       console.error('Fetch failed:', res.status)
