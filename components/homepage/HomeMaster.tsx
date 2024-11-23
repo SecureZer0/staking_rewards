@@ -35,8 +35,6 @@ export default function HomeMaster() {
     const [exampleWalletOwner, setExampleWalletOwner] = useState("")
   //
 
-  console.log(stakingData)
-
   
   // Get data from staking_rewards table
   useEffect(() => {
@@ -85,7 +83,9 @@ export default function HomeMaster() {
   // Calculate the total rewards
   useEffect(() => {
     const total = userPortfolio.reduce((acc, curr) => acc + curr.annual_rewards, 0);
-    setTotalRewards(prev => [...prev, total]);
+    if (total > 5) {
+      setTotalRewards(prev => [...prev, total]);
+    }
   }, [userPortfolio]);
 
 
@@ -96,14 +96,16 @@ export default function HomeMaster() {
         transition-[height] duration-700 ease-in-out h-[100svh] 
       `}>
 
-        <div className="flex flex-col gap-0 sm:-mt-[10vh] mb-10 sm:mb-5">
+        <div className="flex flex-col gap-0 sm:-mt-[10vh]">
         {walletAddress ? 
-          <div className="text-4xl -mt-2  font-medium leading-none">
+          <div className="text-[35px] -mt-2 text-left font-medium leading-none w-[1000px] text-[#696969] mb-[10px]">
+            <h1>
             Staking would earn {exampleWalletOwner ? exampleWalletOwner.split(' ').pop() : 'you'}:
+            </h1>
           </div>
           : 
 
-          <div className="text-left w-[1000px] mb-[15px]">
+          <div className="text-left w-[1000px] mb-[30px]">
             <h1 className=" text-[120px] font-medium leading-none -ml-8">
               Yield Finder
             </h1>
@@ -133,9 +135,6 @@ export default function HomeMaster() {
 
         {walletAddress &&
         <div className="relative group">
-          <div className="text-[18px] font-medium text-[#D6D6D6] mt-3 cursor-help flex items-start gap-1">
-            Annually, if you stake your tokens today
-          </div>
           
           {/* Tooltip */}
           <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 
@@ -181,39 +180,6 @@ export default function HomeMaster() {
           />
       </>
       )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/* 
-      {totalRewards.length > 0 && <p>Total Rewards: {totalRewards[totalRewards.length - 1]}</p>}
-      {stakingDataError && <p>Error getting staking rewards data: {stakingDataError}</p>}
-      
-      {isLoading && <p>Loading wallet tokens...</p>} */}
-
-      {/* {userPortfolio.length > 0 && (
-        <div>
-          <h2>Your Staking Portfolio:</h2>
-          <pre>{JSON.stringify(userPortfolio, null, 2)}</pre>
-        </div>
-      )} */}
-      
-      {/* Show network tokens as they arrive
-      {/* {networkTokens.length > 0 ? (
-        <p>Network tokens: {JSON.stringify(networkTokens)}</p>
-      ) : null}
-       */}
 
     </div>
   )

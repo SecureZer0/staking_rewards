@@ -1,8 +1,6 @@
 import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
-import { DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
-import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ 
@@ -15,8 +13,6 @@ export const metadata: Metadata = {
   description: "See What You're Missing",
 };
 
-import { ThirdwebProvider } from "thirdweb/react";
-import App from "next/app";
  
 
 export default function RootLayout({
@@ -27,16 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className}>
       <body className="antialiased bg-black">
-        <DynamicContextProvider
-          settings={{
-            environmentId: process.env.NEXT_PUBLIC_DYNAMIC_APP_ID!,
-            walletConnectors: [ EthereumWalletConnectors ],
-        }}>
-          <ThirdwebProvider>
+
             <Toaster position="top-right" />
              {children}  
-          </ThirdwebProvider>
-        </DynamicContextProvider>
+
       </body>
     </html>
   );

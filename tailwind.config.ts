@@ -61,6 +61,7 @@ const config: Config = {
   		},
   		screens: {
   			'1200': '1200px',
+			'1370': '1370px'
   		},
   	}
   },

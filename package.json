@@ -6,11 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "cross-env ANALYZE=true next build",
+    "dev:fast": "cross-env NODE_ENV=development next dev",
+    "build:fast": "cross-env NODE_ENV=production next build"
   },
   "dependencies": {
-    "@dynamic-labs/ethereum": "^3.6.2",
-    "@dynamic-labs/sdk-react-core": "^3.6.2",
     "@ethersproject/address": "^5.7.0",
     "@radix-ui/react-dialog": "^1.1.2",
     "@tanstack/react-query": "^5.60.4",
@@ -30,16 +31,19 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.3.0",
+    "react-type-animation": "^3.2.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "thirdweb": "^5.68.0",
     "viem": "^2.21.45"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.0.3",
     "@types/cors": "^2.8.17",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cross-env": "^7.0.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.16",
     "postcss": "^8",

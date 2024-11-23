@@ -23,6 +23,9 @@ export function getStakeUrl(token: UserPortfolio, stakingData: any): string {
     data.apy_chain.toLowerCase() === token.apy_chain.toLowerCase()
   );
 
+  console.log("stakingInfo")
+  console.log(stakingInfo)
+
 
   if (!stakingInfo) {
     return '#';
@@ -31,11 +34,11 @@ export function getStakeUrl(token: UserPortfolio, stakingData: any): string {
   let url = '#';
   switch (source) {
     case 'aave-v2':
-      url = `https://app.aave.com/reserve-overview/?underlyingAsset=${stakingInfo.contract_address[token.apy_chain].toLowerCase()}&marketName=proto_${chain}_v2`;
+      url = `https://app.aave.com/reserve-overview/?underlyingAsset=${stakingInfo.contract_addresses[token.apy_chain].contract_address.toLowerCase()}&marketName=proto_${chain}_v2`;
       break;
 
     case 'aave-v3':
-      url = `https://app.aave.com/reserve-overview/?underlyingAsset=${stakingInfo.contract_address[token.apy_chain].toLowerCase()}&marketName=proto_${chain}_v3`;
+      url = `https://app.aave.com/reserve-overview/?underlyingAsset=${stakingInfo.contract_addresses[token.apy_chain].contract_address.toLowerCase()}&marketName=proto_${chain}_v3`;
       break;
     
     case 'fraxlend':

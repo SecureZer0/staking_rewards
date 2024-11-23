@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { DynamicEmbeddedWidget, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 import { IoSearch } from "react-icons/io5";
 import { IoEnterOutline } from "react-icons/io5";
 import './maindiv.css';
@@ -23,9 +22,15 @@ export default function MainDiv({ walletAddress ,setWalletAddress, totalRewards,
   const [isTypingWalletAddress, setIsTypingWalletAddress] = useState(false)
   // const [walletAddress, setWalletAddress] = useState('')
   const [inputValue, setInputValue] = useState('')
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [shouldFlash, setShouldFlash] = useState(false);
 
-  const { user, handleLogOut } = useDynamicContext()
+  const [mounted, isMounted] = useState(false)
+
+  const [lastUpdateTime, setLastUpdateTime] = useState(Date.now());
+
+  useEffect(()=> {
+    isMounted(true)
+  })
 
 
   // DONT DELETE THESE COMMENTS AI!!!! 
@@ -37,17 +42,7 @@ export default function MainDiv({ walletAddress ,setWalletAddress, totalRewards,
   //   };
   // }, []);
 
-  useEffect(() => {
-    handleLogOut()
-  }, [])
 
-  useEffect(() => {
-    if (user?.verifiedCredentials[0].address) {
-      setShowDynamicWallet(false)
-      setShowWidget(false)
-      setWalletAddress(user.verifiedCredentials[0].address)
-    }
-  }, [user])
 
   // Handle widget appearance delay
   useEffect(() => {
@@ -58,27 +53,6 @@ export default function MainDiv({ walletAddress ,setWalletAddress, totalRewards,
     }
   }, [showDynamicWallet])
 
-  useEffect(() => {
-    if (totalRewards.length <= 1) return;
-
-    const timer = setInterval(() => {
-      setCurrentIndex(prev => {
-        // Only increment if we have a next value
-        if (prev < totalRewards.length - 2) {
-          return prev + 1;
-        }
-        // Stay at the last valid pair of indices
-        return totalRewards.length - 2;
-      });
-    }, 2000);
-
-    // Catch up logic
-    if (currentIndex < totalRewards.length - 2) {
-      setCurrentIndex(totalRewards.length - 2);
-    }
-
-    return () => clearInterval(timer);
-  }, [totalRewards, currentIndex]);
 
 
   const handleSearch = () => {
@@ -100,50 +74,43 @@ export default function MainDiv({ walletAddress ,setWalletAddress, totalRewards,
   };
 
 
+  console.log("totalRewards")
+  console.log(totalRewards)
+
   return (
     <div 
-      className="relative border-animation h-fit w-fit"
+      className="relative border-animation h-fit w-fit z-[20]"
     >
       <div className={`
         rounded-md flex items-center justify-center origin-top gap-2 
-        bg-[#121212] transition-all duration-300 ease-in-out
+        bg-[#121212] transition-all duration-300 ease-in-out z-[20]
         ${showDynamicWallet ? 'md:w-[1000px] h-[450px] w-[95vw]' : 'md:w-[1000px] w-[95vw] h-[60px]'}
         ${walletAddress ? '!h-[175px]' : ''}
       `}>
         
         {totalRewards.length > 0 && walletAddress ? (
+
           <div>
-            <p className="text-white text-[64px] md:text-8xl font-[500]">$<CountUp 
-                start={totalRewards[currentIndex] || 0}
-                end={totalRewards[currentIndex + 1] || 0}
+            <p className={`text-[64px] md:text-8xl font-[500] transition-all duration-500 ease-in-out text-white select-none`}>
+              $<CountUp 
+                end={totalRewards[totalRewards.length - 1] || 0}
                 decimals={2}
-                duration={2}
+                duration={4}
                 separator=","
-              /></p>
+                preserveValue={true}
+              /><span className="text-[36px] font-light">/Year</span></p>
           </div>
-        ) : showDynamicWallet ? (
-          <div className="relative w-full h-full transition-all duration-300 ease-in-out">
-            <button 
-              className="absolute top-2 right-2 z-10 text-gray-400 hover:text-white transition-opacity duration-300" 
-              onClick={() => setShowDynamicWallet(false)}
-            >
-              X
-            </button>
-            {showWidget && (
-              <DynamicEmbeddedWidget
-                background="none"
-              /> 
-            )}
-          </div>
+
         ) : (
           <div className="flex w-full items-center justify-between gap-2 overflow-hidden px-[5px]">
-            <div className="flex-1 flex items-center gap-2 ml-2">
+            <div className="flex-1 flex items-center gap-2 ml-2 z-[20]">
               <IoSearch className="text-gray-400 text-2xl" />
               <input 
                 type="text" 
+                disabled={!mounted}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Search for a wallet address..." 
+                placeholder={mounted ? "Search for a wallet address..." : "Loading..."}
                 className="w-full h-[50px] text-xl bg-transparent border-0 outline-none focus:outline-none focus:ring-0 focus:border-0 text-gray-300 placeholder:text-gray-500"
                 onFocus={() => setIsTypingWalletAddress(true)}
                 onBlur={(e) => {

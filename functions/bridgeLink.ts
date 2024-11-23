@@ -17,11 +17,11 @@ export function getBridgeUrl(token: UserPortfolio, stakingData: StakingRewardTab
   // Special case for ETH on Ethereum
   const tokenIn = token.token_symbol.toUpperCase() === 'ETH' && token.current_chain === 'Ethereum' 
     ? 'ETH' 
-    : stakingInfo.contract_address[token.current_chain];
+    : stakingInfo.contract_addresses[token.current_chain].contract_address;
 
   const tokenOut = token.token_symbol.toUpperCase() === 'ETH' && token.apy_chain === 'Ethereum'
     ? 'ETH'
-    : stakingInfo.contract_address[token.apy_chain];
+    : stakingInfo.contract_addresses[token.apy_chain].contract_address;
 
   const url = `https://app.symbiosis.finance/swap?amountIn&chainIn=${token.current_chain}&chainOut=${token.apy_chain}&tokenIn=${tokenIn}&tokenOut=${tokenOut}`;
 
